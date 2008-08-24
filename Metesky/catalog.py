@@ -1,6 +1,7 @@
 from Metesky.sku import Sku
 import os
 import stat
+import urllib
 from decimal import Decimal
 
 class Catalog(dict):
@@ -34,7 +35,8 @@ class Catalog(dict):
         # new sku?
         if not id in self:
             s = Sku()
-            s._path = self._path + '/skus/' + id
+            s._path = self._path + '/skus/' + urllib.quote_plus(id)
+            os.mkdir(s._path)
 
             s.id = id
             s.stock = 0 # FIXME: zero stock out for now 
@@ -43,7 +45,6 @@ class Catalog(dict):
             s.supplier = supplier
             s.price = price
 
-            os.mkdir('%s/skus/%s' % (self._path,id))
 
             s.save()
             self[id] = s

@@ -23,7 +23,8 @@ class Sku:
     def load(path):
         self = Sku()
         self._path = path
-        self.id = path.split('/')[-1]
+        import urllib
+        self.id = urllib.unquote_plus(path.split('/')[-1])
 
         from util import fromfile
         def get(n,f = str):
