@@ -22,6 +22,7 @@ class Sku:
     @staticmethod
     def load(path):
         self = Sku()
+        self._path = path
         self.id = path.split('/')[-1]
 
         from util import fromfile
@@ -34,6 +35,16 @@ class Sku:
         get('stock',int)
 
         return self
+
+    def save(self):
+        from util import tofile
+        def put(n):
+            tofile(self._path + '/' + n,str(self.__dict__[n]))
+        put('pn')
+        put('supplier')
+        put('description')
+        put('price')
+        put('stock')
 
     def __hash__(self):
         return hash(self.id)

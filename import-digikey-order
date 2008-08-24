@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+import csv
+import sys
+from decimal import Decimal
+
+from Metesky.catalog import catalog
+
+order = list(csv.reader(open(sys.argv[1])))
+
+print order[0]
+for r in order[1:]:
+    qty = int(r[1])
+    pn = r[2]
+    description = r[3]
+    price = Decimal(r[6][1:])
+    extended_price = Decimal(r[7][1:])
+
+    unit_price = extended_price / qty
+
+    print qty,pn,description,price,extended_price,unit_price
+
+
+    catalog.update_sku(id = pn,
+                       stock = qty,
+                       pn = pn,
+                       description = description,
+                       price = unit_price,
+                       supplier = 'Digikey')

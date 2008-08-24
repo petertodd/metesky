@@ -1,6 +1,9 @@
 from Metesky.sku import Sku
+import os
+import stat
+from decimal import Decimal
 
-class Catalog(set):
+class Catalog(dict):
     """The master set of Sku's"""
 
     @staticmethod
@@ -8,8 +11,6 @@ class Catalog(set):
         self = Catalog()
         self._path = path
 
-        import os
-        import stat
         for i in os.listdir(self._path + '/skus/'):
             i = self._path + '/skus/' + i
 
@@ -19,9 +20,36 @@ class Catalog(set):
 
             s = Sku.load(i)
             assert(s not in self)
-            self.add(s)
-
+            self[s.id] = s
         return self
+
+    def update_sku(self,
+                   id = '',
+                   stock = '',
+                   pn = '',
+                   description = '',
+                   supplier = '',
+                   price = Decimal()): 
+
+        # new sku?
+        if not id in self:
+            s = Sku()
+            s._path = self._path + '/skus/' + id
+
+            s.id = id
+            s.stock = 0 # FIXME: zero stock out for now 
+            s.pn = pn
+            s.description = description
+            s.supplier = supplier
+            s.price = price
+
+            os.mkdir('%s/skus/%s' % (self._path,id))
+
+            s.save()
+            self[id] = s
+        else:
+            print '%s already exists' % id
+
 
 from os.path import expanduser
 catalog = Catalog.load(expanduser('~/.metesky'))
