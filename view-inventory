@@ -1,0 +1,6 @@
+#!/usr/bin/python
+
+from Metesky.catalog import catalog 
+
+for i in catalog:
+    print '%s,%s,%s,$%s' % (i.id,i.pn,i.stock,i.price)
