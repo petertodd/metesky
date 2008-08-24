@@ -1,0 +1,22 @@
+#!/usr/bin/python
+
+# input format:
+#
+# qty,id
+
+import sys
+from decimal import Decimal
+from Metesky.catalog import catalog
+
+d = [l.strip().split(',')[0:2] for l in sys.stdin.readlines()]
+
+total = Decimal('0')
+for qty,id in d:
+    qty = int(qty)
+
+    item_cost = catalog[id].cost(qty) 
+    total += item_cost
+    print '%d,%s,%s - $%s' % (qty,id,catalog[id].description,item_cost)
+
+print
+print 'Total: $%s' % total
